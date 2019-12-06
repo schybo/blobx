@@ -1,22 +1,25 @@
 import React from "react";
 import { Chart } from "react-charts";
 
+const calculateSavingsPoints = (savings, months) => {
+  const dataPoints = []
+  for (let i = 0; i < months; i++) {
+    dataPoints.push([i, savings * (i+1)])
+  }
+  return dataPoints
+}
+
 function MyChart(props) {
-  const { monthlyIncome, monthlySavings } = props;
+  const { monthlyIncome, monthlySavings, months } = props;
   const data = React.useMemo(
     () => [
       {
         label: "Brent's Savings",
-        data: [
-          [0, 3],
-          [1, 1],
-          [2, 5],
-          [3, 6],
-          [4, 4]
-        ]
+        data: calculateSavingsPoints(monthlySavings, months)
       }
     ],
-    []
+    // []
+    [monthlySavings, months]
   );
 
   const axes = React.useMemo(

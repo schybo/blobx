@@ -11,7 +11,9 @@ import InputLabel from "@material-ui/core/InputLabel";
 import OutlinedInput from "@material-ui/core/OutlinedInput";
 import TextField from "@material-ui/core/TextField";
 
-const useStyles = makeStyles((theme: Theme) =>
+import MyChart from './MyChart.js'
+
+const useStyles = makeStyles((theme) =>
   createStyles({
     container: {
       display: "flex",
@@ -59,7 +61,7 @@ TextMaskCustom.propTypes = {
 };
 
 function NumberFormatCustom(props) {
-  const { inputRef, onChange, ...other } = props;
+  const { inputRef, onChange, id, ...other } = props;
 
   return (
     <NumberFormat
@@ -67,6 +69,7 @@ function NumberFormatCustom(props) {
       getInputRef={inputRef}
       onValueChange={values => {
         onChange({
+          id,
           target: {
             value: values.value
           }
@@ -88,11 +91,13 @@ export default function ComposedTextField() {
   const [labelWidth, setLabelWidth] = React.useState(0);
   const [name, setName] = React.useState("Composed TextField");
   const labelRef = React.useRef(null);
+  const inputRef = React.useRef(null);
   const classes = useStyles();
 
   const [values, setValues] = React.useState({
     textmask: "(1  )    -    ",
-    numberformat: "1320"
+    income: "1320",
+    savings: "700"
   });
 
   const handleChange = name => event => {
@@ -128,9 +133,9 @@ export default function ComposedTextField() {
       <TextField
         className={classes.formControl}
         label="react-number-format"
-        value={values.numberformat}
-        onChange={handleChange("numberformat")}
-        id="formatted-numberformat-input"
+        value={values.income}
+        onChange={handleChange("income")}
+        id="formatted-income-input"
         InputProps={{
           inputComponent: NumberFormatCustom
         }}
@@ -138,13 +143,14 @@ export default function ComposedTextField() {
       <TextField
         className={classes.formControl}
         label="react-number-format"
-        value={values.numberformat}
-        onChange={handleChange("numberformat")}
-        id="formatted-numberformat-input-2"
+        value={values.savings}
+        onChange={handleChange("savings")}
+        id="formatted-savings-input-2"
         InputProps={{
           inputComponent: NumberFormatCustom
         }}
       />
+      <MyChart monthlySavings={values.savings} months={12}></MyChart>
       <FormControl className={classes.formControl}>
         <InputLabel htmlFor="component-simple">Name</InputLabel>
         <Input id="component-simple" value={name} onChange={handleChange} />
