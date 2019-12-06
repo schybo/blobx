@@ -2,21 +2,11 @@ import React from "react";
 import { Chart } from "react-charts";
 
 function MyChart(props) {
-  console.log(props);
+  const { monthlyIncome, monthlySavings } = props;
   const data = React.useMemo(
     () => [
       {
-        label: "Series 1",
-        data: [
-          [0, 1],
-          [1, 2],
-          [2, 4],
-          [3, 2],
-          [4, 7]
-        ]
-      },
-      {
-        label: "Series 2",
+        label: "Brent's Savings",
         data: [
           [0, 3],
           [1, 1],
