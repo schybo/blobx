@@ -1,3 +1,5 @@
+import ApolloClient, { gql } from "apollo-boost";
+import { ApolloProvider, useQuery } from "@apollo/react-hooks";
 import React from "react";
 import PropTypes from "prop-types";
 import MaskedInput from "react-text-mask";
@@ -10,6 +12,11 @@ import Paper from "@material-ui/core/Paper";
 import Grid from "@material-ui/core/Grid";
 
 import MyChart from "./MyChart.js";
+
+// How do I make this different per env...?
+const client = new ApolloClient({
+  uri: "http://localhost:4000"
+});
 
 const useStyles = makeStyles(theme =>
   createStyles({
@@ -51,8 +58,18 @@ NumberFormatCustom.propTypes = {
   onChange: PropTypes.func.isRequired
 };
 
-export default function ComposedTextField() {
+const BOOKS = gql`
+  {
+    books {
+      title
+      author
+    }
+  }
+`;
+
+export default function App() {
   const classes = useStyles();
+  const { loading, error, data } = useQuery(BOOKS);
 
   const [values, setValues] = React.useState({
     // textmask: "(1  )    -    ",
@@ -69,88 +86,94 @@ export default function ComposedTextField() {
     });
   };
 
+  if (loading) return <p>Loading...</p>;
+  if (error) return <p>Error :(</p>;
+
   return (
-    <div className={classes.container}>
-      <Grid container spacing={3}>
-        <Grid item xs={12}>
-          <Typography variant="h1" component="h1" align="center" gutterBottom>
-            Brent's Savings
-          </Typography>
-        </Grid>
-        <Grid item xs={12} md={6}>
-          <Box
-            display="flex"
-            p={1}
-            flexWrap="wrap"
-            alignItems="center"
-            justifyContent="center"
-          >
-            <TextField
-              className={classes.formControl}
-              label="Monthly Income"
-              value={values.income}
-              onChange={handleChange("income")}
-              id="formatted-income-input"
-              InputProps={{
-                inputComponent: NumberFormatCustom
-              }}
-            />
-            <TextField
-              className={classes.formControl}
-              label="Savings"
-              value={values.savings}
-              onChange={handleChange("savings")}
-              id="formatted-savings-input"
-              InputProps={{
-                inputComponent: NumberFormatCustom
-              }}
-            />
-            <TextField
-              className={classes.formControl}
-              label="Rent"
-              value={values.rent}
-              onChange={handleChange("rent")}
-              id="formatted-rent-input"
-              InputProps={{
-                inputComponent: NumberFormatCustom
-              }}
-            />
-            <TextField
-              className={classes.formControl}
-              label="Months"
-              value={values.months}
-              onChange={handleChange("months")}
-              id="formatted-months-input"
-            />
-            {/* <FormControl className={classes.formControl} error>
-              <InputLabel htmlFor="component-error">Name</InputLabel>
-              <Input
-                id="component-error"
-                value={name}
-                onChange={handleChange}
-                aria-describedby="component-error-text"
+    <ApolloProvider client={client}>
+      <div className={classes.container}>
+        <Grid container spacing={3}>
+          <Grid item xs={12}>
+            <Typography variant="h1" component="h1" align="center" gutterBottom>
+              Brent's Savings
+            </Typography>
+          </Grid>
+          <h1>{data.books[0].title}</h1>
+          <Grid item xs={12} md={6}>
+            <Box
+              display="flex"
+              p={1}
+              flexWrap="wrap"
+              alignItems="center"
+              justifyContent="center"
+            >
+              <TextField
+                className={classes.formControl}
+                label="Monthly Income"
+                value={values.income}
+                onChange={handleChange("income")}
+                id="formatted-income-input"
+                InputProps={{
+                  inputComponent: NumberFormatCustom
+                }}
               />
-              <FormHelperText id="component-error-text">Error</FormHelperText>
-            </FormControl> */}
-          </Box>
+              <TextField
+                className={classes.formControl}
+                label="Savings"
+                value={values.savings}
+                onChange={handleChange("savings")}
+                id="formatted-savings-input"
+                InputProps={{
+                  inputComponent: NumberFormatCustom
+                }}
+              />
+              <TextField
+                className={classes.formControl}
+                label="Rent"
+                value={values.rent}
+                onChange={handleChange("rent")}
+                id="formatted-rent-input"
+                InputProps={{
+                  inputComponent: NumberFormatCustom
+                }}
+              />
+              <TextField
+                className={classes.formControl}
+                label="Months"
+                value={values.months}
+                onChange={handleChange("months")}
+                id="formatted-months-input"
+              />
+              {/* <FormControl className={classes.formControl} error>
+                <InputLabel htmlFor="component-error">Name</InputLabel>
+                <Input
+                  id="component-error"
+                  value={name}
+                  onChange={handleChange}
+                  aria-describedby="component-error-text"
+                />
+                <FormHelperText id="component-error-text">Error</FormHelperText>
+              </FormControl> */}
+            </Box>
+          </Grid>
+          <Grid item xs={12} md={6}>
+            <Box
+              display="flex"
+              p={1}
+              flexWrap="wrap"
+              alignItems="center"
+              justifyContent="center"
+            >
+              <MyChart
+                monthlyIncome={values.income}
+                monthlySavings={values.savings}
+                months={values.months}
+                rent={values.rent}
+              ></MyChart>
+            </Box>
+          </Grid>
         </Grid>
-        <Grid item xs={12} md={6}>
-          <Box
-            display="flex"
-            p={1}
-            flexWrap="wrap"
-            alignItems="center"
-            justifyContent="center"
-          >
-            <MyChart
-              monthlyIncome={values.income}
-              monthlySavings={values.savings}
-              months={values.months}
-              rent={values.rent}
-            ></MyChart>
-          </Box>
-        </Grid>
-      </Grid>
-    </div>
+      </div>
+    </ApolloProvider>
   );
 }
