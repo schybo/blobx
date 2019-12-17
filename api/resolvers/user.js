@@ -1,4 +1,4 @@
-export default {
+module.exports = {
   Query: {
     users: async (parent, args, { models }) => {
       return await models.User.findAll();

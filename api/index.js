@@ -1,9 +1,9 @@
-import { ApolloServer } from "apollo-server";
-import schema from "./schema";
-import resolvers from "./resolvers";
-import models, { sequelize } from "./models";
-
 require("dotenv").config();
+
+const { ApolloServer } = require("apollo-server");
+const schema = require("./schema");
+const resolvers = require("./resolvers");
+const { models, sequelize } = require("./models");
 
 sequelize
   .authenticate()

@@ -1,4 +1,4 @@
-export default {
+module.exports = {
   Query: {
     messages: async (parent, args, { models }) => {
       return await models.Message.findAll();

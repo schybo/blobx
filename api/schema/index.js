@@ -1,6 +1,6 @@
-import { gql } from "apollo-server";
-import userSchema from "./user";
-import messageSchema from "./message";
+const { gql } = require("apollo-server");
+const userSchema = require("./user");
+const messageSchema = require("./message");
 const linkSchema = gql`
   type Query {
     _: Boolean
@@ -12,4 +12,4 @@ const linkSchema = gql`
     _: Boolean
   }
 `;
-export default [linkSchema, userSchema, messageSchema];
+module.exports = [linkSchema, userSchema, messageSchema];
