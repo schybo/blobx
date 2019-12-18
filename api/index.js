@@ -14,45 +14,26 @@ sequelize
     console.error("Unable to connect to the database:", err);
   });
 
-// A schema is a collection of type definitions (hence "typeDefs")
-// that together define the "shape" of queries that are executed against
-// your data.
-// const typeDefs = gql`
-//   # Comments in GraphQL strings (such as this one) start with the hash (#) symbol.
-
-//   # This "Book" type defines the queryable fields for every book in our data source.
-//   type Book {
-//     title: String
-//     author: String
-//   }
-
-//   # The "Query" type is special: it lists all of the available queries that
-//   # clients can execute, along with the return type for each. In this
-//   # case, the "books" query returns an array of zero or more Books (defined above).
-//   type Query {
-//     books: [Book]
-//   }
-// `;
-
-// const books = [
-//   {
-//     title: "Harry Potter and the Chamber of Secrets",
-//     author: "J.K. Rowling"
-//   },
-//   {
-//     title: "Jurassic Park",
-//     author: "Michael Crichton"
-//   }
-// ];
-
 // The ApolloServer constructor requires two parameters: your schema
 // definition and your set of resolvers.
 const server = new ApolloServer({
   typeDefs: schema,
   resolvers,
+  formatError: error => {
+    // remove the internal sequelize error message
+    // leave only the important validation error
+    const message = error.message
+      .replace("SequelizeValidationError: ", "")
+      .replace("Validation error: ", "");
+    return {
+      ...error,
+      message
+    };
+  },
   context: async () => ({
     models,
-    me: await models.User.findByLogin("rwieruch")
+    me: await models.User.findByLogin("rwieruch"),
+    secret: process.env.SERVER_SECRET
   }),
   engine: {
     apiKey: process.env.ENGINE_API_KEY,
@@ -76,6 +57,8 @@ const createUsersWithMessages = async () => {
   await models.User.create(
     {
       username: "rwieruch",
+      email: "hello@robin.com",
+      password: "rwieruch",
       messages: [
         {
           text: "Published the Road to learn React"
@@ -89,6 +72,8 @@ const createUsersWithMessages = async () => {
   await models.User.create(
     {
       username: "ddavids",
+      email: "hello@david.com",
+      password: "ddavids",
       messages: [
         {
           text: "Happy to release ..."
