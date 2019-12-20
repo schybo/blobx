@@ -1,6 +1,7 @@
 require("dotenv").config();
 
-const { ApolloServer } = require("apollo-server");
+const { ApolloServer, AuthenticationError } = require("apollo-server");
+const jwt = require("jsonwebtoken");
 const schema = require("./schema");
 const resolvers = require("./resolvers");
 const { models, sequelize } = require("./models");
@@ -13,6 +14,17 @@ sequelize
   .catch(err => {
     console.error("Unable to connect to the database:", err);
   });
+
+const getMe = async req => {
+  const token = req.headers["x-token"];
+  if (token) {
+    try {
+      return await jwt.verify(token, process.env.SECRET);
+    } catch (e) {
+      throw new AuthenticationError("Your session expired. Sign in again.");
+    }
+  }
+};
 
 // The ApolloServer constructor requires two parameters: your schema
 // definition and your set of resolvers.
@@ -30,11 +42,14 @@ const server = new ApolloServer({
       message
     };
   },
-  context: async () => ({
-    models,
-    me: await models.User.findByLogin("rwieruch"),
-    secret: process.env.SERVER_SECRET
-  }),
+  context: async ({ req }) => {
+    const me = await getMe(req);
+    return {
+      models,
+      me,
+      secret: process.env.SECRET
+    };
+  },
   engine: {
     apiKey: process.env.ENGINE_API_KEY,
     schemaTag: process.env.NODE_ENV
