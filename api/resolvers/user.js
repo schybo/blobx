@@ -4,7 +4,7 @@ const { combineResolvers } = require("graphql-resolvers");
 
 const { isAdmin } = require("./authorization");
 
-const createToken = async user => {
+const createToken = async (user, secret, expiresIn) => {
   const { id, email, username, role } = user;
   return await jwt.sign({ id, email, username, role }, secret, {
     expiresIn
@@ -49,7 +49,6 @@ module.exports = {
       }
     ),
     signIn: async (parent, { login, password }, { models, secret }) => {
-      console.log(secret);
       const user = await models.User.findByLogin(login);
       if (!user) {
         throw new UserInputError("No user found with this login credentials.");
