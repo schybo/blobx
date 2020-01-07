@@ -1,5 +1,5 @@
 const { combineResolvers } = require("graphql-resolvers");
-const { isAuthenticated, isMessageOwner } = require("./authorization");
+const { isAuthenticated, isMessageOwner, isAdmin } = require("./authorization");
 
 module.exports = {
   Query: {

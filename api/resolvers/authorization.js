@@ -17,4 +17,12 @@ const isMessageOwner = async (parent, { id }, { models, me }) => {
   return skip;
 };
 
-module.exports = { isAuthenticated, isAdmin, isMessageOwner };
+const isFinanceOwner = async (parent, { id }, { models, me }) => {
+  const finance = await models.Finance.findByPk(id, { raw: true });
+  if (finance.userId !== me.id) {
+    throw new ForbiddenError("Not authenticated as owner.");
+  }
+  return skip;
+};
+
+module.exports = { isAuthenticated, isAdmin, isMessageOwner, isFinanceOwner };
