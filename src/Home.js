@@ -10,7 +10,6 @@ import Box from "@material-ui/core/Box";
 import Grid from "@material-ui/core/Grid";
 
 import MyChart from "./MyChart.js";
-import Login from "./Login.js";
 
 const useStyles = makeStyles(theme =>
   createStyles({
@@ -94,7 +93,6 @@ export default function Home() {
             Brent's Savings
           </Typography>
         </Grid>
-        <Login></Login>
         <h1>{data.messages[0].text}</h1>
         <h1>{data.messages[1].text}</h1>
         <Grid item xs={12} md={6}>

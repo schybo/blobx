@@ -1,8 +1,11 @@
-import React from "react";
-import { useMutation } from "@apollo/react-hooks";
-import { Paper, withStyles, Grid, TextField, Button, FormControlLabel, Checkbox } from '@material-ui/core';
+import { Button, Checkbox, FormControlLabel, Grid, Paper, TextField, withStyles } from '@material-ui/core';
 import { Face, Fingerprint } from '@material-ui/icons'
-import { SIGN_IN } from "./queries";
+
+import React from "react";
+import { SIGN_IN } from "../queries";
+import { useMutation } from "@apollo/react-hooks";
+import { useHistory } from "react-router-dom";
+
 const styles = theme => ({
     margin: {
         margin: theme.spacing.unit * 2,
@@ -14,7 +17,15 @@ const styles = theme => ({
 
 function Login(props) {
   let username, password;
-  const [signIn, { data }] = useMutation(SIGN_IN);
+  let history = useHistory();
+  const [signIn, { data }] = useMutation(
+    SIGN_IN,
+    {
+      onCompleted(data) {
+        history.push("/");
+      }
+    }
+  );
   const { classes } = props;
 
   return (
@@ -22,6 +33,8 @@ function Login(props) {
       <form
           onSubmit={e => {
             e.preventDefault();
+            console.log(username.value);
+            console.log(password.value);
             signIn({
               variables: { username: username.value, password: password.value }
             });
@@ -36,9 +49,9 @@ function Login(props) {
                 <Face />
               </Grid>
               <Grid item md={true} sm={true} xs={true}>
-                <TextField ref={node => {
+                <TextField inputRef={node => {
                   username = node;
-                }} id="username" label="Username" type="email" fullWidth autoFocus required />
+                }} id="username" label="Username" fullWidth autoFocus required />
               </Grid>
             </Grid>
             <Grid container spacing={8} alignItems="flex-end">
