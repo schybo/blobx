@@ -17,6 +17,8 @@ sequelize
 
 const getMe = async req => {
   const token = req.headers["x-token"];
+  console.log("Token");
+  console.log(token);
   if (token) {
     try {
       return await jwt.verify(token, process.env.SECRET);
@@ -89,6 +91,7 @@ const createUsersWithMessages = async () => {
     {
       username: "schybo",
       email: "brent.scheibelhut@gmail.com",
+      firstName: "Brent",
       password: "test1234",
       role: "ADMIN",
       messages: [

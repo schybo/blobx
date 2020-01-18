@@ -8,10 +8,10 @@ import { useHistory } from "react-router-dom";
 
 const styles = theme => ({
     margin: {
-        margin: theme.spacing.unit * 2,
+        margin: theme.spacing(2),
     },
     padding: {
-        padding: theme.spacing.unit
+        padding: theme.spacing(1)
     }
 });
 
@@ -22,6 +22,7 @@ function Login(props) {
     SIGN_IN,
     {
       onCompleted(data) {
+        localStorage.setItem('x-token', data.signIn.token);
         history.push("/");
       }
     }

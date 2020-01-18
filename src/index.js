@@ -14,7 +14,17 @@ import ReactDOM from "react-dom";
 
 // How do I make this different per env...?
 const client = new ApolloClient({
-  uri: "http://localhost:4000"
+  uri: "http://localhost:4000",
+  request: (operation) => {
+    const token = localStorage.getItem('x-token')
+    if (token) {
+      operation.setContext({
+        headers: {
+          "x-token": `${token}`
+        }
+      })
+    }
+  }
 });
 
 const App = () => (

@@ -51,8 +51,12 @@ NumberFormatCustom.propTypes = {
   onChange: PropTypes.func.isRequired
 };
 
-const MESSAGES = gql`
+const USER_DATA = gql`
   {
+    me {
+      username
+      firstName
+    }
     messages {
       id
       text
@@ -65,7 +69,7 @@ const MESSAGES = gql`
 
 export default function Home() {
   const classes = useStyles();
-  const { loading, error, data } = useQuery(MESSAGES);
+  const { loading, error, data } = useQuery(USER_DATA);
 
   const [values, setValues] = React.useState({
     // textmask: "(1  )    -    ",
@@ -90,7 +94,7 @@ export default function Home() {
       <Grid container spacing={3}>
         <Grid item xs={12}>
           <Typography variant="h1" component="h1" align="center" gutterBottom>
-            Brent's Savings
+            {`${data ? data.me.firstName : 'No Name'}'s Savings`}
           </Typography>
         </Grid>
         <h1>{data.messages[0].text}</h1>
