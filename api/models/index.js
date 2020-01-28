@@ -8,7 +8,8 @@ const sequelize = new Sequelize(process.env.DATABASE_URL, {
 
 const models = {
   User: sequelize.import("./user"),
-  Message: sequelize.import("./message")
+  Message: sequelize.import("./message"),
+  Finance: sequelize.import("./finance")
 };
 Object.keys(models).forEach(key => {
   if ("associate" in models[key]) {

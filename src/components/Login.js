@@ -23,6 +23,7 @@ function Login(props) {
     {
       onCompleted(data) {
         localStorage.setItem('x-token', data.signIn.token);
+        client.writeData({ data: { isLoggedIn: true } });
         history.push("/");
       }
     }

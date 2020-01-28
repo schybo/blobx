@@ -56,12 +56,10 @@ const USER_DATA = gql`
     me {
       username
       firstName
-    }
-    messages {
-      id
-      text
-      user {
-        username
+      finance {
+        income
+        savings
+        rent
       }
     }
   }
@@ -69,9 +67,8 @@ const USER_DATA = gql`
 
 export default function Home() {
   const classes = useStyles();
-  const { loading, error, data } = useQuery(USER_DATA);
 
-  const [values, setValues] = React.useState({
+  const [finances, setFinance] = React.useState({
     // textmask: "(1  )    -    ",
     income: "6600",
     savings: "3000",
@@ -79,9 +76,24 @@ export default function Home() {
     months: 12
   });
 
+  const { loading, error, data } = useQuery(
+    USER_DATA,
+    {
+      onCompleted(data) {
+        console.log(data)
+        setFinance({
+          income: data.me.finance.income,
+          savings: data.me.finance.savings,
+          rent: data.me.finance.rent,
+          months: 12
+        })
+      }
+    }
+  );
+
   const handleChange = name => event => {
-    setValues({
-      ...values,
+    setFinance({
+      ...finances,
       [name]: event.target.value
     });
   };
@@ -97,8 +109,6 @@ export default function Home() {
             {`${data ? data.me.firstName : 'No Name'}'s Savings`}
           </Typography>
         </Grid>
-        <h1>{data.messages[0].text}</h1>
-        <h1>{data.messages[1].text}</h1>
         <Grid item xs={12} md={6}>
           <Box
             display="flex"
@@ -110,7 +120,7 @@ export default function Home() {
             <TextField
               className={classes.formControl}
               label="Monthly Income"
-              value={values.income}
+              value={finances.income}
               onChange={handleChange("income")}
               id="formatted-income-input"
               InputProps={{
@@ -120,7 +130,7 @@ export default function Home() {
             <TextField
               className={classes.formControl}
               label="Savings"
-              value={values.savings}
+              value={finances.savings}
               onChange={handleChange("savings")}
               id="formatted-savings-input"
               InputProps={{
@@ -130,7 +140,7 @@ export default function Home() {
             <TextField
               className={classes.formControl}
               label="Rent"
-              value={values.rent}
+              value={finances.rent}
               onChange={handleChange("rent")}
               id="formatted-rent-input"
               InputProps={{
@@ -140,7 +150,7 @@ export default function Home() {
             <TextField
               className={classes.formControl}
               label="Months"
-              value={values.months}
+              value={finances.months}
               onChange={handleChange("months")}
               id="formatted-months-input"
             />
@@ -165,10 +175,10 @@ export default function Home() {
             justifyContent="center"
           >
             <MyChart
-              monthlyIncome={values.income}
-              monthlySavings={values.savings}
-              months={values.months}
-              rent={values.rent}
+              monthlyIncome={finances.income}
+              monthlySavings={finances.savings}
+              months={finances.months}
+              rent={finances.rent}
             ></MyChart>
           </Box>
         </Grid>

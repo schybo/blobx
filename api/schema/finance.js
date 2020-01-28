@@ -10,9 +10,9 @@ module.exports = gql`
   }
   type Finance {
     id: ID!
-    rent: Integer!
-    savings: Integer!
-    income: Integer!
+    rent: Int!
+    savings: Int!
+    income: Int!
     timespan: String!
     user: User!
   }

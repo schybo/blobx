@@ -38,7 +38,7 @@ module.exports = {
         email,
         password
       });
-      return { token: createToken(user, secret, "30m") };
+      return { token: createToken(user, secret, "1y") };
     },
     deleteUser: combineResolvers(
       isAdmin,
@@ -62,11 +62,10 @@ module.exports = {
   },
   User: {
     messages: async (user, args, { models }) => {
-      return await models.Message.findAll({
-        where: {
-          userId: user.id
-        }
-      });
+      return await user.getMessages();
+    },
+    finance: async (user, args, { models }) => {
+      return await user.getFinance();
     }
   }
 };

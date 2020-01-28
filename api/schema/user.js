@@ -20,5 +20,6 @@ module.exports = gql`
     email: String!
     role: String
     messages: [Message!]
+    finance: Finance
   }
 `;

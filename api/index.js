@@ -98,10 +98,16 @@ const createUsersWithMessages = async () => {
         {
           text: "Blah Blah Blah"
         }
-      ]
+      ],
+      finance: {
+        rent: 1000,
+        savings: 2000,
+        income: 7000,
+        timespan: 'year'
+      }
     },
     {
-      include: [models.Message]
+      include: [models.Message, models.Finance]
     }
   );
   await models.User.create(
