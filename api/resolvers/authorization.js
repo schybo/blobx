@@ -17,8 +17,13 @@ const isMessageOwner = async (parent, { id }, { models, me }) => {
   return skip;
 };
 
-const isFinanceOwner = async (parent, { id }, { models, me }) => {
-  const finance = await models.Finance.findByPk(id, { raw: true });
+const isFinanceOwner = async (parent, args, { models, me }) => {
+  console.log(models);
+  console.log(me);
+  const finance = await models.Finance.findOne({
+    where: {userId: me.id},
+    raw: true
+  })
   if (finance.userId !== me.id) {
     throw new ForbiddenError("Not authenticated as owner.");
   }

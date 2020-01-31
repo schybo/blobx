@@ -40,14 +40,14 @@ module.exports = {
       isAuthenticated,
       isFinanceOwner,
       async (parent, { rent, savings, income }, { models, me }) => {
-        try {
+        // try {
           return await models.Finance.update(
             { rent, savings, income },
             { where: { id: me.finance.id } }
           )
-        } catch (err) {
-          throw new UserInputError("Update of finance information failed.");
-        }
+        // } catch (err) {
+        //   throw new UserInputError("Update of finance information failed.");
+        // }
       }
     )
   },

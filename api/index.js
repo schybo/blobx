@@ -44,6 +44,8 @@ const server = new ApolloServer({
   },
   context: async ({ req }) => {
     const me = await getMe(req);
+    console.log("MODELLSS");
+    console.log(models);
     return {
       models,
       me,

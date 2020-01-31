@@ -107,6 +107,12 @@ export default function Home() {
       [name]: event.target.value
     });
     // Convert all to int
+    console.log(finances)
+    for (let key of Object.keys(finances)) {
+      finances[key] = parseInt(finances[key])
+    }
+    console.log(finances)
+
     updateFinance({
       variables: { ...finances }
     })
