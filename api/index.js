@@ -17,9 +17,7 @@ sequelize
 
 const getMe = async req => {
   const token = req.headers["x-token"];
-  console.log("Token");
-  console.log(token);
-  if (token) {
+  if (token && req.body.operationName != "SignIn") {
     try {
       return await jwt.verify(token, process.env.SECRET);
     } catch (e) {

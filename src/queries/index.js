@@ -8,4 +8,12 @@ const SIGN_IN = gql`
   }
 `;
 
-export { SIGN_IN };
+const UPDATE_FINANCE = gql`
+  mutation UpdateFinance($rent: Int!, $income: Int!, $savings: Int!) {
+    updateFinance(rent: $rent, income: $income, savings: $savings) {
+      id
+    }
+  }
+`;
+
+export { SIGN_IN, UPDATE_FINANCE };

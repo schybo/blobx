@@ -1,8 +1,9 @@
 import { gql } from "apollo-boost";
-import { useQuery } from "@apollo/react-hooks";
+import { useApolloClient, useMutation, useQuery } from "@apollo/react-hooks";
 import React from "react";
 import PropTypes from "prop-types";
 import NumberFormat from "react-number-format";
+import { UPDATE_FINANCE } from "./queries";
 import { createStyles, makeStyles } from "@material-ui/core/styles";
 import Typography from "@material-ui/core/Typography";
 import TextField from "@material-ui/core/TextField";
@@ -76,6 +77,15 @@ export default function Home() {
     months: 12
   });
 
+  const [updateFinance, { updateFinanceResult }] = useMutation(
+    UPDATE_FINANCE,
+    {
+      onCompleted(data) {
+        console.log(data)
+      }
+    }
+  );
+
   const { loading, error, data } = useQuery(
     USER_DATA,
     {
@@ -96,6 +106,10 @@ export default function Home() {
       ...finances,
       [name]: event.target.value
     });
+    // Convert all to int
+    updateFinance({
+      variables: { ...finances }
+    })
   };
 
   if (loading) return <p>Loading...</p>;
@@ -121,6 +135,7 @@ export default function Home() {
               className={classes.formControl}
               label="Monthly Income"
               value={finances.income}
+              // Should be on finished...
               onChange={handleChange("income")}
               id="formatted-income-input"
               InputProps={{

@@ -3,7 +3,7 @@ import { Face, Fingerprint } from '@material-ui/icons'
 
 import React from "react";
 import { SIGN_IN } from "../queries";
-import { useMutation } from "@apollo/react-hooks";
+import { useApolloClient, useMutation } from "@apollo/react-hooks";
 import { useHistory } from "react-router-dom";
 
 const styles = theme => ({
@@ -18,6 +18,7 @@ const styles = theme => ({
 function Login(props) {
   let username, password;
   let history = useHistory();
+  const client = useApolloClient();
   const [signIn, { data }] = useMutation(
     SIGN_IN,
     {
