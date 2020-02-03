@@ -9,8 +9,8 @@ const SIGN_IN = gql`
 `;
 
 const UPDATE_FINANCE = gql`
-  mutation UpdateFinance($rent: Int!, $income: Int!, $savings: Int!) {
-    updateFinance(rent: $rent, income: $income, savings: $savings) {
+  mutation UpdateFinance($id: ID!, $rent: Int!, $income: Int!, $savings: Int!) {
+    updateFinance(id: $id, rent: $rent, income: $income, savings: $savings) {
       id
     }
   }

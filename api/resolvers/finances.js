@@ -39,15 +39,19 @@ module.exports = {
     updateFinance: combineResolvers(
       isAuthenticated,
       isFinanceOwner,
-      async (parent, { rent, savings, income }, { models, me }) => {
-        // try {
-          return await models.Finance.update(
+      async (parent, { id, rent, savings, income }, { models, me }) => {
+        try {
+          result = await models.Finance.update(
             { rent, savings, income },
-            { where: { id: me.finance.id } }
+            {
+              where: { id },
+              returning: true
+            }
           )
-        // } catch (err) {
-        //   throw new UserInputError("Update of finance information failed.");
-        // }
+          return result[1][0].dataValues
+        } catch (err) {
+          throw new UserInputError("Update of finance information failed.");
+        }
       }
     )
   },

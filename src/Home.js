@@ -58,6 +58,7 @@ const USER_DATA = gql`
       username
       firstName
       finance {
+        id
         income
         savings
         rent
@@ -92,6 +93,7 @@ export default function Home() {
       onCompleted(data) {
         console.log(data)
         setFinance({
+          id: data.me.finance.id,
           income: data.me.finance.income,
           savings: data.me.finance.savings,
           rent: data.me.finance.rent,
@@ -106,15 +108,19 @@ export default function Home() {
       ...finances,
       [name]: event.target.value
     });
+
+    let newFinances = Object.assign({}, finances, {
+      [name]: event.target.value
+    });
     // Convert all to int
-    console.log(finances)
-    for (let key of Object.keys(finances)) {
-      finances[key] = parseInt(finances[key])
+    console.log(newFinances)
+    for (let key of Object.keys(newFinances)) {
+      newFinances[key] = parseInt(newFinances[key])
     }
-    console.log(finances)
+    console.log(newFinances)
 
     updateFinance({
-      variables: { ...finances }
+      variables: { ...newFinances }
     })
   };
 
