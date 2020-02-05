@@ -9,6 +9,9 @@ const finance = (sequelize, DataTypes) => {
     income: {
       type: DataTypes.INTEGER
     },
+    utilities: {
+      type: DataTypes.INTEGER
+    },
     timespan: {
       type: DataTypes.ENUM('day', 'month', 'year')
     }

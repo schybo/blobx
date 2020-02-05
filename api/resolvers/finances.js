@@ -39,12 +39,13 @@ module.exports = {
     updateFinance: combineResolvers(
       isAuthenticated,
       isFinanceOwner,
-      async (parent, { id, rent, savings, income }, { models, me }) => {
+      async (parent, { finance }, { models, me }) => {
         try {
+          console.log(finance)
           result = await models.Finance.update(
-            { rent, savings, income },
+            { ...finance },
             {
-              where: { id },
+              where: { id: finance.id },
               returning: true
             }
           )

@@ -10,8 +10,9 @@ import {
   ResponsiveContainer
 } from "recharts";
 
-const calculateSavingsPoints = (income, savings, months, rent) => {
+const calculateSavingsPoints = (income, savings, timespan, rent) => {
   const dataPoints = [];
+  let months = timespan === "year" ? 12 : 1
   for (let i = 0; i < months; i++) {
     dataPoints.push({
       name: `Month ${i + 1}`,
@@ -24,21 +25,21 @@ const calculateSavingsPoints = (income, savings, months, rent) => {
 };
 
 function MyChart(props) {
-  const { monthlyIncome, monthlySavings, months, rent } = props;
+  const { monthlyIncome, monthlySavings, timespan, rent } = props;
   // console.log("HERE");
   // const data = React.useMemo(
   //   () => [
   //     {
-  //       data: calculateSavingsPoints(monthlySavings, months)
+  //       data: calculateSavingsPoints(monthlySavings, timespan)
   //     }
   //   ],
   //   // []
-  //   [monthlySavings, months]
+  //   [monthlySavings, timespan]
   // );
   const data = calculateSavingsPoints(
     monthlyIncome,
     monthlySavings,
-    months,
+    timespan,
     rent
   );
 

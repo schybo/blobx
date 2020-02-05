@@ -6,7 +6,7 @@ module.exports = gql`
   }
   extend type Mutation {
     createFinance(text: String!): Finance!
-    updateFinance(id: ID!, rent: Int!, savings: Int!, income: Int!): Finance!
+    updateFinance(finance: FinanceInput!): Finance!
     deleteFinance(id: ID!): Boolean!
   }
   type Finance {
@@ -14,7 +14,17 @@ module.exports = gql`
     rent: Int!
     savings: Int!
     income: Int!
+    utilities: Int!
     timespan: String!
     user: User!
+  }
+
+  input FinanceInput {
+    id: ID!
+    rent: Int!
+    savings: Int!
+    income: Int!
+    utilities: Int!
+    timespan: String!
   }
 `;

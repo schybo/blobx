@@ -36,7 +36,7 @@ function NumberFormatCustom(props) {
         onChange({
           id,
           target: {
-            value: values.value
+            value: parseInt(values.value)
           }
         });
       }}
@@ -62,6 +62,8 @@ const USER_DATA = gql`
         income
         savings
         rent
+        utilities
+        timespan
       }
     }
   }
@@ -72,10 +74,11 @@ export default function Home() {
 
   const [finances, setFinance] = React.useState({
     // textmask: "(1  )    -    ",
-    income: "6600",
-    savings: "3000",
-    rent: "1350",
-    months: 12
+    income: 6600,
+    savings: 3000,
+    rent: 1350,
+    utilities: 50,
+    timespan: "year"
   });
 
   const [updateFinance, { updateFinanceResult }] = useMutation(
@@ -97,13 +100,15 @@ export default function Home() {
           income: data.me.finance.income,
           savings: data.me.finance.savings,
           rent: data.me.finance.rent,
-          months: 12
+          utilities: data.me.finance.utilities,
+          timespan: data.me.finance.timespan
         })
       }
     }
   );
 
   const handleChange = name => event => {
+    console.log(event.target)
     setFinance({
       ...finances,
       [name]: event.target.value
@@ -112,15 +117,11 @@ export default function Home() {
     let newFinances = Object.assign({}, finances, {
       [name]: event.target.value
     });
-    // Convert all to int
-    console.log(newFinances)
-    for (let key of Object.keys(newFinances)) {
-      newFinances[key] = parseInt(newFinances[key])
-    }
-    console.log(newFinances)
 
+    newFinances = { finance: { ...newFinances } }
+    console.log(newFinances)
     updateFinance({
-      variables: { ...newFinances }
+      variables: newFinances
     })
   };
 
@@ -156,6 +157,17 @@ export default function Home() {
             />
             <TextField
               className={classes.formControl}
+              label="Monthly Utilities"
+              value={finances.utilities}
+              // Should be on finished...
+              onChange={handleChange("utilities")}
+              id="formatted-utilities-input"
+              InputProps={{
+                inputComponent: NumberFormatCustom
+              }}
+            />
+            <TextField
+              className={classes.formControl}
               label="Savings"
               value={finances.savings}
               onChange={handleChange("savings")}
@@ -176,10 +188,10 @@ export default function Home() {
             />
             <TextField
               className={classes.formControl}
-              label="Months"
-              value={finances.months}
-              onChange={handleChange("months")}
-              id="formatted-months-input"
+              label="Timespan"
+              value={finances.timespan}
+              onChange={handleChange("timespan")}
+              id="formatted-timespan-input"
             />
             {/* <FormControl className={classes.formControl} error>
               <InputLabel htmlFor="component-error">Name</InputLabel>
@@ -204,7 +216,7 @@ export default function Home() {
             <MyChart
               monthlyIncome={finances.income}
               monthlySavings={finances.savings}
-              months={finances.months}
+              timespan={finances.timespan}
               rent={finances.rent}
             ></MyChart>
           </Box>
