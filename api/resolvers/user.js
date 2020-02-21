@@ -61,11 +61,8 @@ module.exports = {
     }
   },
   User: {
-    messages: async (user, args, { models }) => {
-      return await user.getMessages();
-    },
-    finance: async (user, args, { models }) => {
-      return await user.getFinance();
+    finances: async (user, args, { models }) => {
+      return await user.getFinances();
     }
   }
 };

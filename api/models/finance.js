@@ -1,19 +1,25 @@
 const finance = (sequelize, DataTypes) => {
   const Finance = sequelize.define("finance", {
-    rent: {
+    title: {
+      type: DataTypes.STRING
+    },
+    type: {
+      type: DataTypes.ENUM('debit', 'credit', 'savings')
+    },
+    currency: {
+      type: DataTypes.STRING
+    },
+    amount: {
       type: DataTypes.INTEGER
     },
-    savings: {
-      type: DataTypes.INTEGER
+    active: {
+      type: DataTypes.BOOLEAN
     },
-    income: {
-      type: DataTypes.INTEGER
-    },
-    utilities: {
-      type: DataTypes.INTEGER
+    tracked: {
+      type: DataTypes.BOOLEAN
     },
     timespan: {
-      type: DataTypes.ENUM('day', 'month', 'year')
+      type: DataTypes.ENUM('once', 'day', 'month', 'year')
     }
   });
   Finance.associate = models => {

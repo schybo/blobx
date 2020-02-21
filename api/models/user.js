@@ -46,8 +46,8 @@ const user = (sequelize, DataTypes) => {
     return await bcrypt.compare(password, this.password);
   };
   User.associate = models => {
-    User.hasMany(models.Message, { onDelete: "CASCADE" });
-    User.hasOne(models.Finance, { onDelete: "CASCADE" });
+    User.hasMany(models.FinanceCategory, { onDelete: "CASCADE" });
+    User.hasMany(models.Finance, { onDelete: "CASCADE" });
   };
   User.findByLogin = async login => {
     let user = await User.findOne({

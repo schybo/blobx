@@ -19,7 +19,6 @@ module.exports = gql`
     firstName: String
     email: String!
     role: String
-    messages: [Message!]
-    finance: Finance
+    finances: [Finance!]
   }
 `;

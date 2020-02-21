@@ -5,14 +5,6 @@ const createUsersWithMessages = async () => {
       email: "hello@robin.com",
       password: "rwieruch",
       role: "ADMIN",
-      messages: [
-        {
-          text: "Published the Road to learn React"
-        }
-      ]
-    },
-    {
-      include: [models.Message]
     }
   );
   await models.User.create(
@@ -22,21 +14,47 @@ const createUsersWithMessages = async () => {
       firstName: "Brent",
       password: "test1234",
       role: "ADMIN",
-      messages: [
+      finance: [
         {
-          text: "Blah Blah Blah"
+          title: 'Rent',
+          amount: 1000,
+          currency: 'CAD',
+          type: 'debit',
+          timespan: 'month',
+          active: true,
+          tracked: false
+        },
+        {
+          title: 'Savings',
+          amount: 2000,
+          currency: 'CAD',
+          type: 'savings',
+          timespan: 'month',
+          active: true,
+          tracked: false
+        },
+        {
+          title: 'Income',
+          amount: 7000,
+          currency: 'CAD',
+          type: 'credit',
+          timespan: 'month',
+          active: true,
+          tracked: false
+        },
+        {
+          title: 'Utilities',
+          amount: 52,
+          currency: 'CAD',
+          type: 'debit',
+          timespan: 'month',
+          active: true,
+          tracked: false
         }
-      ],
-      finance: {
-        rent: 1000,
-        savings: 2000,
-        income: 7000,
-        utilities: 52,
-        timespan: 'year'
-      }
+      ]
     },
     {
-      include: [models.Message, models.Finance]
+      include: [models.Finance]
     }
   );
   await models.User.create(
@@ -44,17 +62,6 @@ const createUsersWithMessages = async () => {
       username: "ddavids",
       email: "hello@david.com",
       password: "ddavids",
-      messages: [
-        {
-          text: "Happy to release ..."
-        },
-        {
-          text: "Published a complete ..."
-        }
-      ]
-    },
-    {
-      include: [models.Message]
     }
   );
 };

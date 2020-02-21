@@ -24,7 +24,7 @@ module.exports = {
       isAuthenticated,
       async (parent, { text }, { models, me }) => {
         return await models.Finance.create({
-          text,
+          ...finance,
           userId: me.id
         });
       }
