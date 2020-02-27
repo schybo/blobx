@@ -5,6 +5,7 @@ const jwt = require("jsonwebtoken");
 const schema = require("./schema");
 const resolvers = require("./resolvers");
 const { models, sequelize } = require("./models");
+const createFixtureUsers = require("./fixtures")
 
 sequelize
   .authenticate()
@@ -58,11 +59,11 @@ const server = new ApolloServer({
   }
 });
 
-const eraseDatabaseOnSync = false;
+const eraseDatabaseOnSync = true;
 // Creates the tables as necessary. May want to use migrations instead for production
 sequelize.sync({ force: eraseDatabaseOnSync }).then(async () => {
   if (eraseDatabaseOnSync) {
-    createUsersWithMessages();
+    createFixtureUsers();
   }
   // The `listen` method launches a web server.
   server.listen({ port: process.env.SERVER_PORT || 4000 }).then(({ url }) => {

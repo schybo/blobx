@@ -1,4 +1,6 @@
-const createUsersWithMessages = async () => {
+const { models } = require("../models");
+
+const createFixtureUsers = async () => {
   await models.User.create(
     {
       username: "rwieruch",
@@ -14,7 +16,7 @@ const createUsersWithMessages = async () => {
       firstName: "Brent",
       password: "test1234",
       role: "ADMIN",
-      finance: [
+      finances: [
         {
           title: 'Rent',
           amount: 1000,
@@ -66,4 +68,4 @@ const createUsersWithMessages = async () => {
   );
 };
 
-export default createUsersWithMessages
+module.exports = createFixtureUsers;

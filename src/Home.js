@@ -57,12 +57,14 @@ const USER_DATA = gql`
     me {
       username
       firstName
-      finance {
+      finances {
         id
-        income
-        savings
-        rent
-        utilities
+        title
+        type
+        currency
+        amount
+        active
+        tracked
         timespan
       }
     }
@@ -72,56 +74,69 @@ const USER_DATA = gql`
 export default function Home() {
   const classes = useStyles();
 
-  const [finances, setFinance] = React.useState({
-    // textmask: "(1  )    -    ",
-    income: 6600,
-    savings: 3000,
-    rent: 1350,
-    utilities: 50,
-    timespan: "year"
-  });
+  const [finances, setFinances] = React.useState([]);
 
   const [updateFinance, { updateFinanceResult }] = useMutation(
     UPDATE_FINANCE,
     {
       onCompleted(data) {
-        console.log(data)
+        console.log(data) // Can add back to array
       }
     }
   );
+
+  const financeInputList = (finances) => {
+    let financeInputs = []
+    Object.values(finances).forEach((finance) => {
+      financeInputs.push(<TextField
+        key={`financeInput-${finance.id}`}
+        className={classes.formControl}
+        label={ finance.title }
+        value={ finance.amount }
+        onChange={handleChange({ 'attr': 'amount', 'finance': finance })}
+        id={ `formatted-finance-input-${finance.id}` }
+        InputProps={{
+          inputComponent: NumberFormatCustom
+        }}
+      />)
+    });
+    return financeInputs
+  }
 
   const { loading, error, data } = useQuery(
     USER_DATA,
     {
       onCompleted(data) {
-        console.log(data)
-        setFinance({
-          id: data.me.finance.id,
-          income: data.me.finance.income,
-          savings: data.me.finance.savings,
-          rent: data.me.finance.rent,
-          utilities: data.me.finance.utilities,
-          timespan: data.me.finance.timespan
+        let financeDict = {}
+        data.me.finances.map((finance) => {
+          financeDict[finance.id] = finance
         })
+        setFinances(financeDict)
       }
     }
   );
 
   const handleChange = name => event => {
-    console.log(event.target)
-    setFinance({
-      ...finances,
-      [name]: event.target.value
+    console.log(name) // this is what is coming in from the top level input
+    console.log(event)
+    let newFinance = Object.assign({}, name.finance, {
+      [name.attr]: event.target.value
     });
+    // console.log(newFinance)
 
     let newFinances = Object.assign({}, finances, {
-      [name]: event.target.value
+      [name.finance.id]: newFinance
     });
 
-    newFinances = { finance: { ...newFinances } }
-    console.log(newFinances)
+    setFinances(newFinances);
+
+    // newFinances = { finance: { ...newFinances } }
+
+    // Look into caching; this should be removed with the cache
+    delete newFinance['__typename']
+
     updateFinance({
-      variables: newFinances
+      variables: { finance: newFinance }
     })
   };
 
@@ -131,11 +146,11 @@ export default function Home() {
   return (
     <div className={classes.container}>
       <Grid container spacing={3}>
-        <Grid item xs={12}>
+        {/* <Grid item xs={12}>
           <Typography variant="h1" component="h1" align="center" gutterBottom>
             {`${data ? data.me.firstName : 'No Name'}'s Savings`}
           </Typography>
-        </Grid>
+        </Grid> */}
         <Grid item xs={12} md={6}>
           <Box
             display="flex"
@@ -144,65 +159,7 @@ export default function Home() {
             alignItems="center"
             justifyContent="center"
           >
-            <TextField
-              className={classes.formControl}
-              label="Monthly Income"
-              value={finances.income}
-              // Should be on finished...
-              onChange={handleChange("income")}
-              id="formatted-income-input"
-              InputProps={{
-                inputComponent: NumberFormatCustom
-              }}
-            />
-            <TextField
-              className={classes.formControl}
-              label="Monthly Utilities"
-              value={finances.utilities}
-              // Should be on finished...
-              onChange={handleChange("utilities")}
-              id="formatted-utilities-input"
-              InputProps={{
-                inputComponent: NumberFormatCustom
-              }}
-            />
-            <TextField
-              className={classes.formControl}
-              label="Savings"
-              value={finances.savings}
-              onChange={handleChange("savings")}
-              id="formatted-savings-input"
-              InputProps={{
-                inputComponent: NumberFormatCustom
-              }}
-            />
-            <TextField
-              className={classes.formControl}
-              label="Rent"
-              value={finances.rent}
-              onChange={handleChange("rent")}
-              id="formatted-rent-input"
-              InputProps={{
-                inputComponent: NumberFormatCustom
-              }}
-            />
-            <TextField
-              className={classes.formControl}
-              label="Timespan"
-              value={finances.timespan}
-              onChange={handleChange("timespan")}
-              id="formatted-timespan-input"
-            />
-            {/* <FormControl className={classes.formControl} error>
-              <InputLabel htmlFor="component-error">Name</InputLabel>
-              <Input
-                id="component-error"
-                value={name}
-                onChange={handleChange}
-                aria-describedby="component-error-text"
-              />
-              <FormHelperText id="component-error-text">Error</FormHelperText>
-            </FormControl> */}
+            { financeInputList(finances) }
           </Box>
         </Grid>
         <Grid item xs={12} md={6}>
@@ -213,12 +170,12 @@ export default function Home() {
             alignItems="center"
             justifyContent="center"
           >
-            <MyChart
-              monthlyIncome={finances.income}
-              monthlySavings={finances.savings}
-              timespan={finances.timespan}
-              rent={finances.rent}
-            ></MyChart>
+            {/* <MyChart
+              monthlyIncome={ finances[0].amount }
+              monthlySavings={ finances.length > 0 ? finances[1].amount : 0}
+              timespan={ finances.length > 0 ? finances[2].amount : 0}
+              rent={ finances.length > 0 ? finances[3].amount : 0}
+            ></MyChart> */}
           </Box>
         </Grid>
       </Grid>
