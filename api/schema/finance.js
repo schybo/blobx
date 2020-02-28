@@ -16,6 +16,7 @@ module.exports = gql`
     currency: String!
     amount: Int!
     active: Boolean!
+    color: String!
     tracked: Boolean!
     timespan: String!
     user: User!
@@ -27,6 +28,7 @@ module.exports = gql`
     type: String!
     currency: String!
     amount: Int!
+    color: String!
     active: Boolean!
     tracked: Boolean!
     timespan: String!

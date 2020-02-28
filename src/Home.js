@@ -170,12 +170,9 @@ export default function Home() {
             alignItems="center"
             justifyContent="center"
           >
-            {/* <MyChart
-              monthlyIncome={ finances[0].amount }
-              monthlySavings={ finances.length > 0 ? finances[1].amount : 0}
-              timespan={ finances.length > 0 ? finances[2].amount : 0}
-              rent={ finances.length > 0 ? finances[3].amount : 0}
-            ></MyChart> */}
+            <MyChart
+              finances= { finances }
+            ></MyChart>
           </Box>
         </Grid>
       </Grid>

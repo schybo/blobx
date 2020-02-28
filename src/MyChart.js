@@ -10,38 +10,46 @@ import {
   ResponsiveContainer
 } from "recharts";
 
-const calculateSavingsPoints = (income, savings, timespan, rent) => {
-  const dataPoints = [];
-  let months = timespan === "year" ? 12 : 1
-  for (let i = 0; i < months; i++) {
-    dataPoints.push({
-      name: `Month ${i + 1}`,
-      pv: savings * (i + 1),
-      uv: income * (i + 1),
-      vv: rent * (i + 1)
-    });
+const getRandomHexColor = () => '#'+(Math.random()*0xFFFFFF<<0).toString(16);
+
+const calculateSavingsPoints = (finances) => {
+  if (!!finances) {
+    const dataPoints = [];
+    let months = 12
+    for (let i = 0; i < months; i++) {
+      const dataPoint = {}
+      dataPoint['name'] = `Month ${i + 1}`;
+      Object.values(finances).forEach((finance) => {
+        dataPoint[finance.id] = finance.amount * (i + 1)
+      })
+      dataPoints.push(dataPoint);
+    }
+    return dataPoints;
   }
-  return dataPoints;
 };
 
+const generateLines = (finances) => {
+  if (finances) {
+    const lines = []
+    Object.values(finances).forEach((finance) =>
+      lines.push(<Line
+        type="monotone"
+        key={ finance.id }
+        dataKey={ finance.id }
+        stroke={ finance.color || getRandomHexColor() }
+        name={ finance.title }
+      />)
+    )
+    return lines
+  }
+  return null
+}
+
 function MyChart(props) {
-  const { monthlyIncome, monthlySavings, timespan, rent } = props;
-  // console.log("HERE");
-  // const data = React.useMemo(
-  //   () => [
-  //     {
-  //       data: calculateSavingsPoints(monthlySavings, timespan)
-  //     }
-  //   ],
-  //   // []
-  //   [monthlySavings, timespan]
-  // );
-  const data = calculateSavingsPoints(
-    monthlyIncome,
-    monthlySavings,
-    timespan,
-    rent
-  );
+  const { finances } = props;
+  // React.useMemo ?
+  const data = calculateSavingsPoints(finances);
+  console.log(generateLines(finances))
 
   const lineChart = (
     // A react-chart hyper-responsively and continously fills the available
@@ -56,9 +64,7 @@ function MyChart(props) {
         <YAxis />
         <Tooltip />
         <Legend />
-        <Line type="monotone" dataKey="pv" stroke="#8884d8" />
-        <Line type="monotone" dataKey="uv" stroke="#82ca9d" />
-        <Line type="monotone" dataKey="vv" stroke="#858a9d" />
+        { generateLines(finances) }
       </LineChart>
     </ResponsiveContainer>
   );

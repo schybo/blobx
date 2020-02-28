@@ -12,6 +12,9 @@ const finance = (sequelize, DataTypes) => {
     amount: {
       type: DataTypes.INTEGER
     },
+    color: {
+      type: DataTypes.STRING
+    },
     active: {
       type: DataTypes.BOOLEAN
     },
