@@ -16,4 +16,12 @@ const UPDATE_FINANCE = gql`
   }
 `;
 
-export { SIGN_IN, UPDATE_FINANCE };
+const CREATE_FINANCE = gql`
+  mutation CreateFinance($finance: FinanceInput!) {
+    createFinance(finance: $finance) {
+      id
+    }
+  }
+`;
+
+export { SIGN_IN, UPDATE_FINANCE, CREATE_FINANCE };

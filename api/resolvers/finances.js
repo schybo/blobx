@@ -22,7 +22,7 @@ module.exports = {
   Mutation: {
     createFinance: combineResolvers(
       isAuthenticated,
-      async (parent, { text }, { models, me }) => {
+      async (parent, { finance }, { models, me }) => {
         return await models.Finance.create({
           ...finance,
           userId: me.id

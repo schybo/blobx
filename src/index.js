@@ -6,9 +6,10 @@ import { BrowserRouter, Route, Switch } from 'react-router-dom'
 
 import ApolloClient from "apollo-boost";
 import { ApolloProvider } from "@apollo/react-hooks";
-import ButtonAppBar from './components/ButtonAppBar'
+import PersistentDrawerLeft from './components/PersistentDrawerLeft'
 import Home from "./Home";
 import Login from "./components/Login";
+import Create from "./components/Create";
 import React from "react";
 import ReactDOM from "react-dom";
 
@@ -30,13 +31,15 @@ const client = new ApolloClient({
 const App = () => (
   <BrowserRouter>
     <ApolloProvider client={client}>
-      <ButtonAppBar />
-      <div className="ph3 pv1 background-gray">
-        <Switch>
-          <Route exact path="/" component={Home} />
-          <Route exact path="/login" component={Login} />
-        </Switch>
-      </div>
+      <PersistentDrawerLeft>
+        <div className="ph3 pv1 background-gray">
+          <Switch>
+            <Route exact path="/" component={Home} />
+            <Route exact path="/create" component={Create} />
+            <Route exact path="/login" component={Login} />
+          </Switch>
+        </div>
+      </PersistentDrawerLeft>
     </ApolloProvider>
   </BrowserRouter>
 );

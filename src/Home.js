@@ -5,6 +5,7 @@ import PropTypes from "prop-types";
 import NumberFormat from "react-number-format";
 import { UPDATE_FINANCE } from "./queries";
 import { createStyles, makeStyles } from "@material-ui/core/styles";
+import Button from '@material-ui/core/Button';
 import Typography from "@material-ui/core/Typography";
 import TextField from "@material-ui/core/TextField";
 import Box from "@material-ui/core/Box";
@@ -173,6 +174,17 @@ export default function Home() {
             <MyChart
               finances= { finances }
             ></MyChart>
+          </Box>
+        </Grid>
+        <Grid item xs={12} md={6}>
+          <Box
+            display="flex"
+            p={1}
+            flexWrap="wrap"
+            alignItems="center"
+            justifyContent="center"
+          >
+            <Button variant="contained" size="medium" color="primary">Create New Finance</Button>
           </Box>
         </Grid>
       </Grid>
